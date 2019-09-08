@@ -4,7 +4,16 @@
 
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
-  return 1;
+  char buf[LENGTH];
+  int num_correct = 0;
+
+  while(fscanf(fp, "%s", buf) != EOF) {
+    if(check_word(buf, hashtable)) {
+      num_correct++;
+    }
+  }
+
+  return num_correct;
 }
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
