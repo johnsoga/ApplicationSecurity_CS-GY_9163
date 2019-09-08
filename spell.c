@@ -59,28 +59,28 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   return 0;
 }
-int main(int argc, char **argv) {
-
-  int i;
-  char *wordlist = argv[2];
-  char *inputlist = argv[1];
-  char *misspelled;
-  hashmap_t hashtable[HASH_SIZE];
-  hashmap_t tmp;
-
-  for (i = 0; i < HASH_SIZE; i++) {
-    tmp = malloc(sizeof(node));
-    if(tmp != NULL) {
-      tmp->word[0] = '\0';
-      tmp->next = NULL;
-      hashtable[i] = tmp;
-    } else {
-      printf("Failed to allocate memory");
-      exit(0);
-    }
-  }
-
-  load_dictionary(wordlist, hashtable);
-  // check_words(fp, hashtable, misspelled);
-  return 0;
-}
+// int main(int argc, char **argv) {
+//
+//   int i;
+//   char *wordlist = argv[2];
+//   char *inputlist = argv[1];
+//   char *misspelled;
+//   hashmap_t hashtable[HASH_SIZE];
+//   hashmap_t tmp;
+//
+//   for (i = 0; i < HASH_SIZE; i++) {
+//     tmp = malloc(sizeof(node));
+//     if(tmp != NULL) {
+//       tmp->word[0] = '\0';
+//       tmp->next = NULL;
+//       hashtable[i] = tmp;
+//     } else {
+//       printf("Failed to allocate memory");
+//       exit(0);
+//     }
+//   }
+//
+//   load_dictionary(wordlist, hashtable);
+//   check_words(fp, hashtable, misspelled);
+//   return 0;
+// }
