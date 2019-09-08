@@ -1,0 +1,10 @@
+
+dictionary.c
+
+dictionary.h
+
+wordlist.txt
+
+*.o
+
+spell_check
