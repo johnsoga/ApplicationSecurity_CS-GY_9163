@@ -12,11 +12,11 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
     if(check_word(buf, hashtable)) {
       num_correct++;
     } else {
+      return false;
     }
   }
 
   return true;
-      return false;
 }
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
