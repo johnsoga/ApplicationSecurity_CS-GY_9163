@@ -1,10 +1,22 @@
 #include "dictionary.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
-  return 1;
+  char buf[LENGTH];
+  int num_correct = 0;
+
+  while(fscanf(fp, "%s", buf) != EOF) {
+    if(check_word(buf, hashtable)) {
+      num_correct++;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
 }
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
@@ -31,15 +43,15 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
           tmp2->next = NULL;
           tmp->next = tmp2;
         } else {
-          return 0;
+          return false;
         }
       }
     }
     fclose(fp);
-    return 1;
+    return true;
   }
 
-  return 0;
+  return false;
 }
 bool check_word(const char* word, hashmap_t hashtable[]) {
 
@@ -51,13 +63,13 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   do {
     if(!strcmp(word, tmp->word)) {
-      return 1;
+      return true;
     } else {
       tmp = tmp->next;
     }
   } while(tmp->next != NULL);
 
-  return 0;
+  return false;
 }
 // int main(int argc, char **argv) {
 //
