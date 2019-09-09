@@ -7,8 +7,10 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
   char buf[LENGTH];
   int num_correct = 0;
-
+  
+  printf("Attempting to Scan File");
   while(fscanf(fp, "%s", buf) != EOF) {
+    printf("%s\n", buf);
     if(check_word(buf, hashtable)) {
       num_correct++;
     } else {
