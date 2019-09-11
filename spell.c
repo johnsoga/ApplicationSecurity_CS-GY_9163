@@ -42,27 +42,24 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
       bucket_value = hash_function(buf);
       if((tmp = hashtable[bucket_value]) == NULL) {
         if((tmp = malloc(sizeof(node))) != NULL) {
-          strcpy(tmp->word, buf);
+          strncpy(tmp->word, buf, sizeof(buf));
           tmp->next = NULL;
           hashtable[bucket_value] = tmp;
         } else {
           return false;
         }
-      } else if(tmp->next == NULL && strlen(tmp->word[0]) == 0) {
-        strcpy(tmp->word, buf);
       } else {
-          while(tmp->next != NULL) {
-            tmp = tmp->next;
-          }
-          tmp2 = malloc(sizeof(node));
-          if(tmp2 != NULL) {
-            strcpy(tmp2->word, buf);
-            tmp2->next = NULL;
-            tmp->next = tmp2;
-          } else {
-            return false;
-          }
+        while(tmp->next != NULL) {
+          tmp = tmp->next;
         }
+        if((tmp2 = malloc(sizeof(node)))!= NULL) {
+          strncpy(tmp2->word, buf, sizeof(buf));
+          tmp2->next = NULL;
+          tmp->next = tmp2;
+        } else {
+          return false;
+        }
+      }
     }
     fclose(fp);
     return true;
