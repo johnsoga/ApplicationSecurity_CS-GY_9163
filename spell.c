@@ -29,28 +29,40 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   hashmap_t tmp;
   hashmap_t tmp2;
 
+  if(strlen(dictionary_file) < 1) {
+    return false;
+  }
+  if(sizeof(hashtable) / sizeof(hashmap_t) < HASH_SIZE) {
+    return false;
+  }
+
   fp = fopen(dictionary_file, "r");
   if (fp != NULL) {
-    // while(fscanf(fp, "%{LENGTH}s", buf) != EOF) {
     while((rtn_value = fgets(buf, LENGTH+1, fp)) != NULL) {
-      printf("%s\n", rtn_value);
       bucket_value = hash_function(buf);
-      tmp = hashtable[bucket_value];
-      if(tmp->next == NULL && tmp->word[0] == '\0') {
-        strcpy(tmp->word, buf);
-      } else {
-        while(tmp->next != NULL) {
-          tmp = tmp->next;
-        }
-        tmp2 = malloc(sizeof(node));
-        if(tmp2 != NULL) {
-          strcpy(tmp2->word, buf);
-          tmp2->next = NULL;
-          tmp->next = tmp2;
+      if((tmp = hashtable[bucket_value]) == NULL) {
+        if((tmp = malloc(sizeof(node))) != NULL) {
+          strcpy(tmp->word, buf);
+          tmp->next = NULL;
+          hashtable[bucket_value] = tmp;
         } else {
           return false;
         }
-      }
+      } else if(tmp->next == NULL && strlen(tmp->word[0]) == 0) {
+        strcpy(tmp->word, buf);
+      } else {
+          while(tmp->next != NULL) {
+            tmp = tmp->next;
+          }
+          tmp2 = malloc(sizeof(node));
+          if(tmp2 != NULL) {
+            strcpy(tmp2->word, buf);
+            tmp2->next = NULL;
+            tmp->next = tmp2;
+          } else {
+            return false;
+          }
+        }
     }
     fclose(fp);
     return true;
