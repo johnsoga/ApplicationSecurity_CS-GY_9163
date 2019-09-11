@@ -23,14 +23,15 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
   FILE *fp;
-  char buf[LENGTH];
+  char buf[LENGTH+1];
   int bucket_value;
   hashmap_t tmp;
   hashmap_t tmp2;
 
   fp = fopen(dictionary_file, "r");
   if (fp != NULL) {
-    while(fscanf(fp, "%s", buf) != EOF) {
+    // while(fscanf(fp, "%{LENGTH}s", buf) != EOF) {
+    while(fgets(buf, LENGTH+1, fp) != EOF) {
       bucket_value = hash_function(buf);
       tmp = hashtable[bucket_value];
       if(tmp->next == NULL && tmp->word[0] == '\0') {
@@ -72,7 +73,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
       }
     } while(tmp != NULL);
   }
-  
+
   return false;
 }
 // int main(int argc, char **argv) {
