@@ -7,7 +7,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
   char buf[LENGTH];
   int num_correct = 0;
-  
+
   printf("Attempting to Scan File");
   while(fscanf(fp, "%s", buf) != EOF) {
     printf("%s\n", buf);
@@ -63,14 +63,16 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   bucket_value = hash_function(word);
   tmp = hashtable[bucket_value];
 
-  do {
-    if(!strcmp(word, tmp->word)) {
-      return true;
-    } else {
-      tmp = tmp->next;
-    }
-  } while(tmp->next != NULL);
-
+  if(tmp != NULL) {
+    do {
+      if(strcmp(word, tmp->word) == 0) {
+        return true;
+      } else {
+        tmp = tmp->next;
+      }
+    } while(tmp != NULL);
+  }
+  
   return false;
 }
 // int main(int argc, char **argv) {
