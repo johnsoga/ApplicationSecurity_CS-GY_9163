@@ -33,6 +33,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   if (fp != NULL) {
     // while(fscanf(fp, "%{LENGTH}s", buf) != EOF) {
     while((rtn_value = fgets(buf, LENGTH+1, fp)) != NULL) {
+      printf("%s\n", rtn_value);
       bucket_value = hash_function(buf);
       tmp = hashtable[bucket_value];
       if(tmp->next == NULL && tmp->word[0] == '\0') {
