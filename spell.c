@@ -23,7 +23,8 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
   FILE *fp;
-  char buf[LENGTH];
+  char buf[LENGTH+1];
+  char * rtn_value;
   int bucket_value;
   hashmap_t tmp;
   hashmap_t tmp2;
@@ -31,7 +32,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   fp = fopen(dictionary_file, "r");
   if (fp != NULL) {
     // while(fscanf(fp, "%{LENGTH}s", buf) != EOF) {
-    while(fgets(buf, LENGTH+1, fp) != EOF) {
+    while((rtn_value = fgets(buf, LENGTH+1, fp)) != NULL) {
       bucket_value = hash_function(buf);
       tmp = hashtable[bucket_value];
       if(tmp->next == NULL && tmp->word[0] == '\0') {
@@ -76,28 +77,28 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   return false;
 }
-// int main(int argc, char **argv) {
-//
-//   int i;
-//   char *wordlist = argv[2];
-//   char *inputlist = argv[1];
-//   char *misspelled;
-//   hashmap_t hashtable[HASH_SIZE];
-//   hashmap_t tmp;
-//
-//   for (i = 0; i < HASH_SIZE; i++) {
-//     tmp = malloc(sizeof(node));
-//     if(tmp != NULL) {
-//       tmp->word[0] = '\0';
-//       tmp->next = NULL;
-//       hashtable[i] = tmp;
-//     } else {
-//       printf("Failed to allocate memory");
-//       exit(0);
-//     }
-//   }
-//
-//   load_dictionary(wordlist, hashtable);
-//   check_words(fp, hashtable, misspelled);
-//   return 0;
-// }
+int main(int argc, char **argv) {
+
+  int i;
+  char *wordlist = argv[2];
+  char *inputlist = argv[1];
+  char *misspelled;
+  hashmap_t hashtable[HASH_SIZE];
+  hashmap_t tmp;
+
+  for (i = 0; i < HASH_SIZE; i++) {
+    tmp = malloc(sizeof(node));
+    if(tmp != NULL) {
+      tmp->word[0] = '\0';
+      tmp->next = NULL;
+      hashtable[i] = tmp;
+    } else {
+      printf("Failed to allocate memory");
+      exit(0);
+    }
+  }
+
+  load_dictionary(wordlist, hashtable);
+  // check_words(fp, hashtable, misspelled);
+  return 0;
+}
