@@ -23,7 +23,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
   FILE *fp;
-  char buf[LENGTH+1];
+  char buf[LENGTH];
   int bucket_value;
   hashmap_t tmp;
   hashmap_t tmp2;
