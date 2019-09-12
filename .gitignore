@@ -1,3 +1,5 @@
 *.o
 
 spell_check
+
+textlist.txt
