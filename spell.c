@@ -93,13 +93,3 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   return false;
 }
-int main(int argc, char **argv) {
-
-  char *wordlist = argv[2];
-  char *inputlist = argv[1];
-  hashmap_t hashtable[HASH_SIZE];
-
-  load_dictionary(wordlist, hashtable);
-  // check_words(fp, hashtable, misspelled);
-  return 0;
-}
