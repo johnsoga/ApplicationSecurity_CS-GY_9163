@@ -78,11 +78,11 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
     fix_word(buf, LENGTH+1);
     // printf("Word is %s\n", buf);
     if(!check_word(buf, hashtable)) {
-      printf("Not Found:\t%s\n", buf);
+      // printf("Not Found:\t%s\n", buf);
       num_incorrect++;
       // strncpy(misspelled[0], buf, sizeof(buf));
     } else {
-      printf("Found:\t\t%s\n", buf);
+      // printf("Found:\t\t%s\n", buf);
     }
   }
 
