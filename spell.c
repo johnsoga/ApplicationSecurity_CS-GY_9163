@@ -36,15 +36,16 @@ void fix_word(char word[], size_t word_length) {
   //   }
   //   counter--;
   // }
-  // //strip numbers from string
-  // while(*src) {
-  //   if(isdigit(*src)) {
-  //     src++;
-  //   } else {
-  //     *dest++ = *src++;
-  //   }
-  // }
-  // *dest = '\0';
+  //strip numbers from string
+  src = dest = word;
+  while(*src) {
+    if(ispunct(*src)) {
+      src++;
+    } else {
+      *dest++ = *src++;
+    }
+  }
+  *dest = '\0';
 
 
 
