@@ -76,13 +76,12 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
   char buf[LENGTH+1];
   int num_incorrect = 0;
-  int counter = 0;
 
   while(fscanf(fp, "%s", buf) != EOF) {
     if(!check_word(buf, hashtable)) {
+      misspelled[num_incorrect] = malloc(sizeof(buf));
+      strncpy(misspelled[num_incorrect], buf, sizeof(buf));
       num_incorrect++;
-      misspelled[counter] = malloc(sizeof(buf));
-      strncpy(misspelled[counter], buf, sizeof(buf));
     }
   }
 
@@ -139,7 +138,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
     }
-    tmp = tmp->next;
+    cursor = cursor->next;
   }
 
   bucket_value = hash_function(word);
@@ -149,22 +148,28 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
     }
-    tmp = tmp->next;
+    cursor = cursor->next;
   }
 
   return false;
 }
-// int main(int argc, char **argv) {
-//
-//   char *wordlist = argv[2];
-//   char *text = argv[1];
-//   char *misspelled[MAX_MISSPELLED];
-//   FILE *fp;
-//
-//   hashmap_t hashtable[HASH_SIZE];
-//   fp = fopen(text, "r");
-//
-//   load_dictionary(wordlist, hashtable);
-//   printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
-//   return 0;
-// }
+int main(int argc, char **argv) {
+
+  char *wordlist = argv[2];
+  char *text = argv[1];
+  char *misspelled[MAX_MISSPELLED];
+  FILE *fp;
+  int i = 0;
+
+  hashmap_t hashtable[HASH_SIZE];
+  fp = fopen(text, "r");
+
+  load_dictionary(wordlist, hashtable);
+  printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
+
+  for(i = 0; i<5; i++) {
+    printf("%s\n", misspelled[i]);
+    i++;
+  }
+  return 0;
+}
