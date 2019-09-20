@@ -154,17 +154,17 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   return false;
 }
-int main(int argc, char **argv) {
-
-  char *wordlist = argv[2];
-  char *text = argv[1];
-  char *misspelled[MAX_MISSPELLED];
-  FILE *fp;
-
-  hashmap_t hashtable[HASH_SIZE];
-  fp = fopen(text, "r");
-
-  load_dictionary(wordlist, hashtable);
-  printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
-  return 0;
-}
+// int main(int argc, char **argv) {
+//
+//   char *wordlist = argv[2];
+//   char *text = argv[1];
+//   char *misspelled[MAX_MISSPELLED];
+//   FILE *fp;
+//
+//   hashmap_t hashtable[HASH_SIZE];
+//   fp = fopen(text, "r");
+//
+//   load_dictionary(wordlist, hashtable);
+//   printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
+//   return 0;
+// }
