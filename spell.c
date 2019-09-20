@@ -79,14 +79,10 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
   int counter = 0;
 
   while(fscanf(fp, "%s", buf) != EOF) {
-    toLowercase(buf);
-    // printf("Word is %s\n", buf);
     if(!check_word(buf, hashtable)) {
-      // printf("Not Found:\t%s\n", buf);
       num_incorrect++;
-      misspelled[counter] = buf;
-    } else {
-      // printf("Found:\t\t%s\n", buf);
+      misspelled[counter] = malloc(sizeof(buf));
+      strncpy(misspelled[counter], buf, sizeof(buf));
     }
   }
 
@@ -96,43 +92,35 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
   FILE *fp;
   char buf[LENGTH+1];
-  char * rtn_value;
   int bucket_value;
-  hashmap_t tmp;
-  hashmap_t tmp2;
+  hashmap_t new_node;
   int counter;
 
+  //  Initialize all values in hash table to NULL.
   for(counter = 0; counter < HASH_SIZE; counter++) {
     hashtable[counter] = NULL;
   }
-
+  //  Open dict_file from path stored in dictionary.
   fp = fopen(dictionary_file, "r");
+
+  //  If dict_file is NULL: return false
   if (fp == NULL) {
     return false;
   }
-  while((rtn_value = fgets(buf, LENGTH+1, fp)) != NULL) {
+  // While word in dict_file is not EOF (end of file):
+  while(fgets(buf, LENGTH+1, fp) != NULL) {
     buf[strcspn(buf, "\n")] = 0;
-    toLowercase(buf);
+    // toLowercase(buf);
+    new_node = malloc(sizeof(struct node));
+    new_node->next = NULL;
+    strncpy(new_node->word, buf, sizeof(buf));
     bucket_value = hash_function(buf);
-    if((tmp = hashtable[bucket_value]) == NULL) {
-      if((tmp = malloc(sizeof(node))) != NULL) {
-        strncpy(tmp->word, buf, sizeof(buf));
-        tmp->next = NULL;
-        hashtable[bucket_value] = tmp;
-      } else {
-        return false;
-      }
+
+    if(hashtable[bucket_value] == NULL) {
+      hashtable[bucket_value] = new_node;
     } else {
-      while(tmp->next != NULL) {
-        tmp = tmp->next;
-      }
-      if((tmp2 = malloc(sizeof(node)))!= NULL) {
-        strncpy(tmp2->word, buf, sizeof(buf));
-        tmp2->next = NULL;
-        tmp->next = tmp2;
-      } else {
-        return false;
-      }
+      new_node->next = hashtable[bucket_value];
+      hashtable[bucket_value] = new_node;
     }
   }
 
@@ -142,32 +130,41 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 bool check_word(const char* word, hashmap_t hashtable[]) {
 
   int bucket_value;
-  hashmap_t tmp;
+  hashmap_t cursor;
 
   bucket_value = hash_function(word);
-  tmp = hashtable[bucket_value];
+  cursor = hashtable[bucket_value];
 
-  while(tmp != NULL) {
-    if(strcmp(word, tmp->word) == 0) {
+  while(cursor != NULL) {
+    if(strcmp(word, cursor->word) == 0) {
       return true;
-    } else {
-      tmp = tmp->next;
     }
+    tmp = tmp->next;
+  }
+
+  bucket_value = hash_function(word);
+  cursor = hashtable[bucket_value];
+  toLowercase(word);
+  while(cursor != NULL) {
+    if(strcmp(word, cursor->word) == 0) {
+      return true;
+    }
+    tmp = tmp->next;
   }
 
   return false;
 }
-// int main(int argc, char **argv) {
-//
-//   char *wordlist = argv[2];
-//   char *text = argv[1];
-//   char *misspelled[MAX_MISSPELLED];
-//   FILE *fp;
-//
-//   hashmap_t hashtable[HASH_SIZE];
-//   fp = fopen(text, "r");
-//
-//   load_dictionary(wordlist, hashtable);
-//   check_words(fp, hashtable, misspelled);
-//   return 0;
-// }
+int main(int argc, char **argv) {
+
+  char *wordlist = argv[2];
+  char *text = argv[1];
+  char *misspelled[MAX_MISSPELLED];
+  FILE *fp;
+
+  hashmap_t hashtable[HASH_SIZE];
+  fp = fopen(text, "r");
+
+  load_dictionary(wordlist, hashtable);
+  printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
+  return 0;
+}
