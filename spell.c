@@ -16,14 +16,6 @@ void fix_word(char word[], size_t word_length) {
   char buf[LENGTH+1];
   int counter;
 
-  //lowercase the word
-  while(*src) {
-    if(isalpha(*src)) {
-      *src = tolower((int)*src);
-    }
-    *src++;
-  }
-
   // //remove trailing punctuation
   // src = word;
   // counter = 0;
@@ -69,6 +61,17 @@ void fix_word(char word[], size_t word_length) {
   // *dest = '\0';
 
 }
+void toLowercase(char *word) {
+
+  char* src = word;
+
+  while(*src) {
+    if(isalpha(*src)) {
+      *src = tolower((int)*src);
+    }
+    *src++;
+  }
+}
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
   char buf[LENGTH+1];
@@ -76,7 +79,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
   int counter = 0;
 
   while(fscanf(fp, "%s", buf) != EOF) {
-    fix_word(buf, LENGTH+1);
+    toLowercase(buf);
     // printf("Word is %s\n", buf);
     if(!check_word(buf, hashtable)) {
       // printf("Not Found:\t%s\n", buf);
@@ -109,6 +112,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   }
   while((rtn_value = fgets(buf, LENGTH+1, fp)) != NULL) {
     buf[strcspn(buf, "\n")] = 0;
+    toLowercase(buf);
     bucket_value = hash_function(buf);
     if((tmp = hashtable[bucket_value]) == NULL) {
       if((tmp = malloc(sizeof(node))) != NULL) {
