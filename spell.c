@@ -7,58 +7,6 @@
 // PROF REPO: https://github.com/kcg295/AppSecAssignment1
 // words separated by spaces
 // "" etc at the beginning should be removed
-void fix_word(char word[], size_t word_length) {
-
-  char* dest = word;
-  char* src = word;
-  char buf[LENGTH+1];
-  int counter;
-
-  // //remove trailing punctuation
-  // src = word;
-  // counter = 0;
-  // // printf("%c\n", src[counter-1]);
-  //
-  // while(word[counter+1] != \) {
-  //   // printf("%s\n", word[counter-1]);
-  //   if(ispunct(word[counter0])) {
-  //     word[counter-1] = '\0';
-  //   }
-  //   counter--;
-  // }
-  //strip numbers from string
-  src = dest = word;
-  while(*src) {
-    if(ispunct(*src)) {
-      src++;
-    } else {
-      *dest++ = *src++;
-    }
-  }
-  *dest = '\0';
-
-
-
-  //strip any punctuation out of the word
-  // src = word;
-  // dest = word;
-  // while (*src) {
-  //   printf("SRC is %c\n", src[0]);
-  //   printf("DEST is %c\n", dest[0]);
-  //   if (ispunct((int)src[0])) {
-  //     src++;
-  //   }
-  //   else if (src == dest) {
-  //     printf("\n\n???\n\n\n");
-  //     src++;
-  //     dest++;
-  //   } else {
-  //     *dest++ = *src++;
-  //   }
-  // }
-  // *dest = '\0';
-
-}
 void toLowercase(char *word) {
 
   char* src = word;
@@ -177,7 +125,6 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   trim(word);
   bucket_value = hash_function(word);
   cursor = hashtable[bucket_value];
-  printf("Checking... '%s'\n", word);
   while(cursor != NULL) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
