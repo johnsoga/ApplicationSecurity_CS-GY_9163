@@ -75,7 +75,7 @@ void trim(char *word) {
   char* src = word;
   char* dest = word;
   bool check = false;
-  int counter = strlen(word);
+  int counter;
 
   while(*src) {
     if(!check) {
@@ -90,10 +90,16 @@ void trim(char *word) {
   }
   *dest = '\0';
 
+  counter = strlen(word)-1;
   check = false;
   while(counter > 0) {
-    if(!isalpha(word[counter])) {
-      word[counter] = '\0';
+    if(!check) {
+      if(ispunct(word[counter])) {
+        word[counter] = '\0';
+      } else {
+        check = true;
+        break;
+      }
     }
     counter--;
   }
@@ -106,9 +112,9 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
   while(fscanf(fp, "%s", buf) != EOF) {
     if(!check_word(buf, hashtable)) {
+      misspelled[num_incorrect] = malloc(sizeof(buf));
+      strncpy(misspelled[num_incorrect], buf, sizeof(buf));
       num_incorrect++;
-      misspelled[counter] = malloc(sizeof(buf));
-      strncpy(misspelled[counter], buf, sizeof(buf));
     }
   }
 
@@ -167,10 +173,11 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     cursor = cursor->next;
   }
 
-  bucket_value = hash_function(word);
-  cursor = hashtable[bucket_value];
   toLowercase(word);
   trim(word);
+  bucket_value = hash_function(word);
+  cursor = hashtable[bucket_value];
+  printf("Checking... '%s'\n", word);
   while(cursor != NULL) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
@@ -180,23 +187,22 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   return false;
 }
-// int main(int argc, char **argv) {
-//
-//   char *wordlist = argv[2];
-//   char *text = argv[1];
-//   char *misspelled[MAX_MISSPELLED];
-//   FILE *fp;
-//   int i = 0;
-//
-//   hashmap_t hashtable[HASH_SIZE];
-//   fp = fopen(text, "r");
-//
-//   load_dictionary(wordlist, hashtable);
-//   printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
-//
-//   for(i = 0; i<5; i++) {
-//     printf("%s\n", misspelled[i]);
-//     i++;
-//   }
-//   return 0;
-// }
+int main(int argc, char **argv) {
+
+  char *wordlist = argv[2];
+  char *text = argv[1];
+  char *misspelled[MAX_MISSPELLED];
+  FILE *fp;
+  int i = 0;
+
+  hashmap_t hashtable[HASH_SIZE];
+  fp = fopen(text, "r");
+
+  load_dictionary(wordlist, hashtable);
+  printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
+
+  for(i = 0; i<5; i++) {
+    printf("%s\n", misspelled[i]);
+  }
+  return 0;
+}
