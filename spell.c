@@ -4,9 +4,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-// PROF REPO: https://github.com/kcg295/AppSecAssignment1
-// words separated by spaces
-// "" etc at the beginning should be removed
 void toLowercase(char *word) {
 
   char* src = word;
@@ -54,7 +51,7 @@ void trim(char *word) {
 }
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
-  char buf[LENGTH+1];
+  char buf[LENGTH+1] = {'\0'};
   int num_incorrect = 0;
   int counter = 0;
 
@@ -90,7 +87,6 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   // While word in dict_file is not EOF (end of file):
   while(fgets(buf, LENGTH+1, fp) != NULL) {
     buf[strcspn(buf, "\n")] = 0;
-    // toLowercase(buf);
     new_node = malloc(sizeof(struct node));
     new_node->next = NULL;
     strncpy(new_node->word, buf, sizeof(buf));
@@ -134,22 +130,3 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   return false;
 }
-// int main(int argc, char **argv) {
-//
-//   char *wordlist = argv[2];
-//   char *text = argv[1];
-//   char *misspelled[MAX_MISSPELLED];
-//   FILE *fp;
-//   int i = 0;
-//
-//   hashmap_t hashtable[HASH_SIZE];
-//   fp = fopen(text, "r");
-//
-//   load_dictionary(wordlist, hashtable);
-//   printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
-//
-//   for(i = 0; i<5; i++) {
-//     printf("%s\n", misspelled[i]);
-//   }
-//   return 0;
-// }
