@@ -139,7 +139,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
     }
-    tmp = tmp->next;
+    cursor = cursor->next;
   }
 
   bucket_value = hash_function(word);
@@ -149,7 +149,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
     }
-    tmp = tmp->next;
+    cursor = cursor->next;
   }
 
   return false;
