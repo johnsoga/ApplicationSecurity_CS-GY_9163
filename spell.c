@@ -75,6 +75,7 @@ void trim(char *word) {
   char* src = word;
   char* dest = word;
   bool check = false;
+  int counter = strlen(word)-1;
 
   while(*src) {
     if(!check) {
@@ -88,6 +89,14 @@ void trim(char *word) {
     }
   }
   *dest = '\0';
+
+  check = false;
+  while(counter > 0) {
+    if(!isalpha(word[counter])) {
+      word[counter] = '\0';
+    }
+    counter--;
+  }
 }
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
