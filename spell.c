@@ -6,8 +6,6 @@
 
 // PROF REPO: https://github.com/kcg295/AppSecAssignment1
 // words separated by spaces
-// strip punctuation at the end only
-// punctuation in the middle is misspelled
 // "" etc at the beginning should be removed
 void fix_word(char word[], size_t word_length) {
 
@@ -72,6 +70,25 @@ void toLowercase(char *word) {
     *src++;
   }
 }
+void trim(char *word) {
+
+  char* src = word;
+  char* dest = word;
+  bool check = false;
+
+  while(*src) {
+    if(!check) {
+      if(ispunct(*src)) {
+        src++;
+      } else {
+        check = true;
+      }
+    } else {
+      *dest++ = *src++;
+    }
+  }
+  *dest = '\0';
+}
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
   char buf[LENGTH+1];
@@ -134,7 +151,6 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   bucket_value = hash_function(word);
   cursor = hashtable[bucket_value];
-
   while(cursor != NULL) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
@@ -145,6 +161,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   bucket_value = hash_function(word);
   cursor = hashtable[bucket_value];
   toLowercase(word);
+  trim(word);
   while(cursor != NULL) {
     if(strcmp(word, cursor->word) == 0) {
       return true;
@@ -154,23 +171,23 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   return false;
 }
-// int main(int argc, char **argv) {
-//
-//   char *wordlist = argv[2];
-//   char *text = argv[1];
-//   char *misspelled[MAX_MISSPELLED];
-//   FILE *fp;
-//   int i = 0;
-//
-//   hashmap_t hashtable[HASH_SIZE];
-//   fp = fopen(text, "r");
-//
-//   load_dictionary(wordlist, hashtable);
-//   printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
-//
-//   for(i = 0; i<5; i++) {
-//     printf("%s\n", misspelled[i]);
-//     i++;
-//   }
-//   return 0;
-// }
+int main(int argc, char **argv) {
+
+  char *wordlist = argv[2];
+  char *text = argv[1];
+  char *misspelled[MAX_MISSPELLED];
+  FILE *fp;
+  int i = 0;
+
+  hashmap_t hashtable[HASH_SIZE];
+  fp = fopen(text, "r");
+
+  load_dictionary(wordlist, hashtable);
+  printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
+
+  for(i = 0; i<5; i++) {
+    printf("%s\n", misspelled[i]);
+    i++;
+  }
+  return 0;
+}
