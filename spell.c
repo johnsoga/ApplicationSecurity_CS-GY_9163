@@ -51,12 +51,15 @@ void trim(char *word) {
 }
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
-  char buf[LENGTH+1] = {'\0'};
+  char buf[LENGTH+1];
+  char* overflow;
   int num_incorrect = 0;
   int counter = 0;
 
-  while(fgets(buf, LENGTH+1, fp) != NULL) {
-    buf[strcspn(buf, "\n")] = 0;
+  while(fscanf(fp, "%ms", &overflow) != EOF) {
+    strncpy(buf, overflow, LENGTH);
+    free(overflow);
+    buf[LENGTH+1] = '\0';
     if(!check_word(buf, hashtable)) {
       misspelled[num_incorrect] = malloc(sizeof(buf));
       strncpy(misspelled[num_incorrect], buf, sizeof(buf));
