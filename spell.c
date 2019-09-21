@@ -55,7 +55,8 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
   int num_incorrect = 0;
   int counter = 0;
 
-  while(fscanf(fp, "%45s", buf) != EOF) {
+  while(fgets(buf, LENGTH+1, fp) != NULL) {
+    buf[strcspn(buf, "\n")] = 0;
     if(!check_word(buf, hashtable)) {
       misspelled[num_incorrect] = malloc(sizeof(buf));
       strncpy(misspelled[num_incorrect], buf, sizeof(buf));
