@@ -75,7 +75,7 @@ void trim(char *word) {
   char* src = word;
   char* dest = word;
   bool check = false;
-  int counter = strlen(word)-1;
+  int counter = strlen(word);
 
   while(*src) {
     if(!check) {
