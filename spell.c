@@ -60,7 +60,6 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
     strncpy(buf, overflow, LENGTH);
     free(overflow);
     buf[LENGTH] = '\0';
-    printf("original word: %s\n", buf);
     if(!check_word(buf, hashtable)) {
       misspelled[num_incorrect] = malloc(sizeof(buf));
       strncpy(misspelled[num_incorrect], buf, sizeof(buf));
