@@ -15,6 +15,25 @@ void toLowercase(char *word) {
     *src++;
   }
 }
+int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
+
+  char buf[LENGTH+1];
+  char* overflow;
+  int num_incorrect = 0;
+
+  while(fscanf(fp, "%ms", &overflow) != EOF) {
+    strncpy(buf, overflow, LENGTH);
+    free(overflow);
+    buf[LENGTH] = '\0';
+    if(!check_word(buf, hashtable)) {
+      misspelled[num_incorrect] = malloc(sizeof(buf));
+      strncpy(misspelled[num_incorrect], buf, sizeof(buf));
+      num_incorrect++;
+    }
+  }
+
+  return num_incorrect;
+}
 void trim(char *word) {
 
   char* src = word;
@@ -49,26 +68,6 @@ void trim(char *word) {
     counter--;
   }
 }
-int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
-
-  char buf[LENGTH+1];
-  char* overflow;
-  int num_incorrect = 0;
-  int counter = 0;
-
-  while(fscanf(fp, "%ms", &overflow) != EOF) {
-    strncpy(buf, overflow, LENGTH);
-    free(overflow);
-    buf[LENGTH] = '\0';
-    if(!check_word(buf, hashtable)) {
-      misspelled[num_incorrect] = malloc(sizeof(buf));
-      strncpy(misspelled[num_incorrect], buf, sizeof(buf));
-      num_incorrect++;
-    }
-  }
-
-  return num_incorrect;
-}
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
   FILE *fp;
@@ -81,13 +80,16 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   for(counter = 0; counter < HASH_SIZE; counter++) {
     hashtable[counter] = NULL;
   }
+
   //  Open dict_file from path stored in dictionary.
   fp = fopen(dictionary_file, "r");
 
   //  If dict_file is NULL: return false
   if (fp == NULL) {
+    fclose(fp);
     return false;
   }
+
   // While word in dict_file is not EOF (end of file):
   while(fgets(buf, LENGTH+1, fp) != NULL) {
     buf[strcspn(buf, "\n")] = 0;
@@ -133,4 +135,25 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   }
 
   return false;
+}
+int main(int argc, char **argv) {
+
+  char *wordlist = argv[2];
+  char *text = argv[1];
+  char *misspelled[MAX_MISSPELLED];
+  FILE *fp;
+  // int i = 0;
+
+  hashmap_t hashtable[HASH_SIZE];
+  fp = fopen(text, "r");
+
+  load_dictionary(wordlist, hashtable);
+  check_words(fp, hashtable, misspelled);
+  // printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
+  //
+  // for(i = 0; i<7; i++) {
+  //   printf("%s\n", misspelled[i]);
+  // }
+  fclose(fp);
+  return 0;
 }
