@@ -19,8 +19,14 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
   char buf[LENGTH+1];
   char* overflow;
-  int num_incorrect = 0;
+  int num_incorrect;
 
+  //  Initialize all values in misspelled to NULL.
+  for(num_incorrect = 0; num_incorrect < MAX_MISSPELLED; num_incorrect++) {
+    misspelled[num_incorrect] = NULL;
+  }
+
+  num_incorrect = 0;
   while(fscanf(fp, "%ms", &overflow) != EOF) {
     strncpy(buf, overflow, LENGTH);
     free(overflow);
@@ -142,18 +148,30 @@ int main(int argc, char **argv) {
   char *text = argv[1];
   char *misspelled[MAX_MISSPELLED];
   FILE *fp;
-  // int i = 0;
+  int i;
+  hashmap_t curr;
+  hashmap_t next;
 
   hashmap_t hashtable[HASH_SIZE];
   fp = fopen(text, "r");
 
   load_dictionary(wordlist, hashtable);
   check_words(fp, hashtable, misspelled);
-  // printf("Found %d bad words\n", check_words(fp, hashtable, misspelled));
-  //
-  // for(i = 0; i<7; i++) {
-  //   printf("%s\n", misspelled[i]);
-  // }
+
+  for(i = 0; i < HASH_SIZE; i++) {
+    curr = hashtable[i];
+    while(curr != NULL) {
+      next = curr->next;
+      free(curr);
+      curr = next;
+    }
+  }
+  for(i = 0; i < MAX_MISSPELLED; i++) {
+    if(misspelled[i] != NULL) {
+      free(misspelled[i]);
+    }
+  }
+
   fclose(fp);
   return 0;
 }
