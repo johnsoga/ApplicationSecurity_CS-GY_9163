@@ -4,68 +4,36 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-void toLowercase(char *word) {
+void toLowercase(char *buf, const char *word) {
 
-  char* src = word;
+  strcpy(buf, word);
+  int i = 0;
 
-  while(*src) {
-    if(isalpha(*src)) {
-      *src = tolower((int)*src);
+  while(buf[i] != '\0') {
+    if(isalpha(buf[i])) {
+       buf[i] = tolower((int)buf[i]);
     }
-    *src++;
+    i++;
   }
 }
-void trim(char *word) {
 
-  char* src = word;
-  char* dest = word;
-  bool check = false;
-  int counter;
+void trim_end(char *buf, const char *word, size_t length) {
 
-  while(*src) {
-    if(!check) {
-      if(ispunct(*src)) {
-        src++;
-      } else {
-        check = true;
-      }
-    } else {
-      *dest++ = *src++;
-    }
-  }
-  *dest = '\0';
+  strcpy(buf, word);
+  int i = length-1;
 
-  counter = strlen(word)-1;
-  check = false;
-  while(counter > 0) {
-    if(!check) {
-      if(ispunct(word[counter])) {
-        word[counter] = '\0';
-      } else {
-        check = true;
-        break;
-      }
-    }
-    counter--;
-  }
-}
-void trim_end(char *word) {
-
-  int i = strlen(word)-1;
-
-  while(!isalpha(word[i-1]) && ispunct(word[i])) {
-      word[i] = '\0';
-      printf("hi %s\n", word);
+  while(!isalpha(buf[i-1]) && ispunct(buf[i])) {
+      buf[i] = '\0';
       i--;
   }
 
-  if(ispunct(word[i])) {
-    word[i] = '\0';
+  if(ispunct(buf[i])) {
+    buf[i] = '\0';
   }
 }
-bool check_ascii(char *word) {
+bool check_ascii(const char *word) {
 
-  char* src = word;
+  const char* src = word;
 
   while(*src) {
     if(isascii(*src)) {
@@ -77,18 +45,17 @@ bool check_ascii(char *word) {
 
   return true;
 }
-bool check_punct(char *word) {
+bool check_punct(const char *word) {
 
-  char* src = word;
+  const char* src = word;
 
   while(*src) {
-    if(!ispunct(*src)) {
-      src++;
-    } else {
-      if(*src != "'") {
+    if(ispunct(*src)) {
+      if(strcmp(src, "'") != 0) {
         return true;
       }
     }
+    src++;
   }
 
   return false;
@@ -138,6 +105,9 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   int bucket_value;
   hashmap_t cursor;
+  int length = strlen(word);
+  char buf[length];
+  memset(buf, '\0', sizeof(buf));
 
   if(!check_ascii(word)) {
     return false;
@@ -147,31 +117,32 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     return false;
   }
 
-  trim_end(word);
-  
-  if(check_punct(word)) {
+  trim_end(buf, word, length);
+
+  if(check_punct(buf)) {
     return false;
   }
 
-  bucket_value = hash_function(word);
+  bucket_value = hash_function(buf);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
-    if(strcmp(word, cursor->word) == 0) {
+    if(strcmp(buf, cursor->word) == 0) {
       return true;
     }
     cursor = cursor->next;
   }
 
-  toLowercase(word);
-  trim(word);
+  toLowercase(buf, word);
   bucket_value = hash_function(word);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
-    if(strcmp(word, cursor->word) == 0) {
+    if(strcmp(buf, cursor->word) == 0) {
       return true;
     }
     cursor = cursor->next;
   }
+
+  printf("%s\t%s\n", buf, word);
 
   return false;
 }
