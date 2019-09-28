@@ -6,7 +6,6 @@
 
 void toLowercase(char *buf, const char *word) {
 
-  strcpy(buf, word);
   int i = 0;
 
   while(buf[i] != '\0') {
@@ -16,10 +15,8 @@ void toLowercase(char *buf, const char *word) {
     i++;
   }
 }
+void trim_end(char *buf, size_t length) {
 
-void trim_end(char *buf, const char *word, size_t length) {
-
-  strcpy(buf, word);
   int i = length-1;
 
   while(!isalpha(buf[i-1]) && ispunct(buf[i])) {
@@ -31,9 +28,9 @@ void trim_end(char *buf, const char *word, size_t length) {
     buf[i] = '\0';
   }
 }
-bool check_ascii(const char *word) {
+bool check_ascii(char *buf) {
 
-  const char* src = word;
+  char* src = buf;
 
   while(*src) {
     if(isascii(*src)) {
@@ -45,9 +42,9 @@ bool check_ascii(const char *word) {
 
   return true;
 }
-bool check_punct(const char *word) {
+bool check_punct(char *buf) {
 
-  const char* src = word;
+  char* src = buf;
 
   while(*src) {
     if(ispunct(*src)) {
@@ -108,22 +105,25 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   int length = strlen(word);
   char buf[length];
   memset(buf, '\0', sizeof(buf));
+  strcpy(buf, word);
+
 
   if(!check_ascii(word)) {
     return false;
   }
 
-  if(strlen(word) > LENGTH) {
+  if(length > LENGTH) {
     return false;
   }
 
-  trim_end(buf, word, length);
+  trim_end(buf, length);
 
   if(check_punct(buf)) {
     return false;
   }
 
-  toLowercase(buf, word);
+  toLowercase(buf);
+  
   bucket_value = hash_function(buf);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
