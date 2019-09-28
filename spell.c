@@ -124,7 +124,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   }
 
   toLowercase(buf, word);
-  bucket_value = hash_function(word);
+  bucket_value = hash_function(buf);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
     if(strcmp(buf, cursor->word) == 0) {

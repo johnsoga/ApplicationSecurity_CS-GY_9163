@@ -10,13 +10,23 @@ int main(int argc, char **argv) {
   int i;
   hashmap_t curr;
   hashmap_t next;
-  char *iw = "Hello";
+  char *iw = "Justice";
 
   hashmap_t hashtable[HASH_SIZE];
   fp = fopen(text, "r");
 
   load_dictionary(wordlist, hashtable);
-  check_word(iw, hashtable);
+  // for(i = 0; i < HASH_SIZE; i++) {
+  //   curr = hashtable[i];
+  //   while(curr != NULL) {
+  //     printf("%s >", curr->word);
+  //     next = curr->next;
+  //     curr = next;
+  //   }
+  //   printf("%s\n", curr->word);
+  // }
+  printf("%s\n", check_word(iw, hashtable) ? "true" : "false");
+
   // check_words(fp, hashtable, misspelled);
 
   // for(i = 0; i < HASH_SIZE; i++) {
