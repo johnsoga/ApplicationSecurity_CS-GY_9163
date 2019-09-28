@@ -49,7 +49,7 @@ void trim(char *word) {
     counter--;
   }
 }
-bool check_ascii(char * word) {
+bool check_ascii(char *word) {
 
   char* src = word;
 
@@ -58,6 +58,22 @@ bool check_ascii(char * word) {
       src++;
     } else {
       return false;
+    }
+  }
+
+  return true;
+}
+bool check_punct(char *word) {
+
+  char* src = word;
+
+  while(*src) {
+    if(!ispunct(*src)) {
+      src++;
+    } else {
+      if(*src != "'") {
+        return false;
+      }
     }
   }
 
