@@ -120,6 +120,10 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   int bucket_value;
   hashmap_t cursor;
 
+  if(strlen(word) > LENGTH) {
+      return false;
+  }
+
   bucket_value = hash_function(word);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
