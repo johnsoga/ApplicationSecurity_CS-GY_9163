@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-void toLowercase(char *buf, const char *word) {
+void toLowercase(char *buf) {
 
   int i = 0;
 
@@ -123,7 +123,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   }
 
   toLowercase(buf);
-  
+
   bucket_value = hash_function(buf);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
