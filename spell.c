@@ -15,31 +15,6 @@ void toLowercase(char *word) {
     *src++;
   }
 }
-int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
-
-  char buf[LENGTH+1];
-  char* overflow;
-  int num_incorrect;
-
-  //  Initialize all values in misspelled to NULL.
-  for(num_incorrect = 0; num_incorrect < MAX_MISSPELLED; num_incorrect++) {
-    misspelled[num_incorrect] = NULL;
-  }
-
-  num_incorrect = 0;
-  while(fscanf(fp, "%ms", &overflow) != EOF) {
-    strncpy(buf, overflow, LENGTH);
-    free(overflow);
-    buf[LENGTH] = '\0';
-    if(!check_word(buf, hashtable)) {
-      misspelled[num_incorrect] = malloc(sizeof(buf));
-      strncpy(misspelled[num_incorrect], buf, sizeof(buf));
-      num_incorrect++;
-    }
-  }
-
-  return num_incorrect;
-}
 void trim(char *word) {
 
   char* src = word;
@@ -73,6 +48,20 @@ void trim(char *word) {
     }
     counter--;
   }
+}
+bool check_ascii(char * word) {
+
+  char* src = word;
+
+  while(*src) {
+    if(isascii(*src)) {
+      src++;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
 }
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
@@ -120,8 +109,12 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   int bucket_value;
   hashmap_t cursor;
 
+  if(!check_ascii(word)) {
+    return false;
+  }
+
   if(strlen(word) > LENGTH) {
-      return false;
+    return false;
   }
 
   bucket_value = hash_function(word);
@@ -145,4 +138,29 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   }
 
   return false;
+}
+int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
+
+  char buf[LENGTH+1];
+  char* overflow;
+  int num_incorrect;
+
+  //  Initialize all values in misspelled to NULL.
+  for(num_incorrect = 0; num_incorrect < MAX_MISSPELLED; num_incorrect++) {
+    misspelled[num_incorrect] = NULL;
+  }
+
+  num_incorrect = 0;
+  while(fscanf(fp, "%ms", &overflow) != EOF) {
+    strncpy(buf, overflow, LENGTH);
+    free(overflow);
+    buf[LENGTH] = '\0';
+    if(!check_word(buf, hashtable)) {
+      misspelled[num_incorrect] = malloc(sizeof(buf));
+      strncpy(misspelled[num_incorrect], buf, sizeof(buf));
+      num_incorrect++;
+    }
+  }
+
+  return num_incorrect;
 }
