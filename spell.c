@@ -133,7 +133,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     return false;
   }
 
-  if(check_punct) {
+  if(check_punct(word)) {
     return false;
   }
 
