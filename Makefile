@@ -27,7 +27,7 @@ test: dictionary.o spell.o test_main.o
 
 prog: dictionary.o spell.o main.o
 	gcc -Wall -o spell_check dictionary.o spell.o main.o
-
+    ./spell_check test1.txt wordlist.txt
 clean:
 	rm *.o
 
