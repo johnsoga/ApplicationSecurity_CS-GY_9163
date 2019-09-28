@@ -72,12 +72,12 @@ bool check_punct(char *word) {
       src++;
     } else {
       if(*src != "'") {
-        return false;
+        return true;
       }
     }
   }
 
-  return true;
+  return false;
 }
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
@@ -130,6 +130,10 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   }
 
   if(strlen(word) > LENGTH) {
+    return false;
+  }
+
+  if(check_punct) {
     return false;
   }
 
