@@ -32,4 +32,4 @@ clean:
 	rm *.o
 
 cleanall:clean
-	rm spell_check
+	rm spell_check test_main
