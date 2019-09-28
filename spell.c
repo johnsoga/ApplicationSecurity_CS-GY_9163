@@ -65,6 +65,8 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   hashmap_t new_node;
   int counter;
 
+  memset(buf, '\0', sizeof(buf));
+
   //  Initialize all values in hash table to NULL.
   for(counter = 0; counter < HASH_SIZE; counter++) {
     hashtable[counter] = NULL;
@@ -82,6 +84,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   // While word in dict_file is not EOF (end of file):
   while(fgets(buf, LENGTH+1, fp) != NULL) {
     buf[strcspn(buf, "\n")] = 0;
+    printf("%s\n", buf);
     new_node = malloc(sizeof(struct node));
     new_node->next = NULL;
     strncpy(new_node->word, buf, strlen(buf));
