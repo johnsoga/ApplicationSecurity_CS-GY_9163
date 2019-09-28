@@ -49,6 +49,20 @@ void trim(char *word) {
     counter--;
   }
 }
+void trim_end(char *word) {
+
+  int i = strlen(word)-1;
+
+  while(!isalpha(word[i-1]) && ispunct(word[i])) {
+      word[i] = '\0';
+      printf("hi %s\n", word);
+      i--;
+  }
+
+  if(ispunct(word[i])) {
+    word[i] = '\0';
+  }
+}
 bool check_ascii(char *word) {
 
   char* src = word;
@@ -133,6 +147,8 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     return false;
   }
 
+  trim_end(word);
+  
   if(check_punct(word)) {
     return false;
   }
