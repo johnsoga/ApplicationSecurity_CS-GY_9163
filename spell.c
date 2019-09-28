@@ -87,7 +87,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
     buf[strcspn(buf, "\n")] = 0;
     new_node = malloc(sizeof(struct node));
     new_node->next = NULL;
-    strncpy(new_node->word, buf, sizeof(buf));
+    strncpy(new_node->word, buf, strlen(buf));
     bucket_value = hash_function(buf);
 
     if(hashtable[bucket_value] == NULL) {
@@ -123,15 +123,6 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     return false;
   }
 
-  bucket_value = hash_function(buf);
-  cursor = hashtable[bucket_value];
-  while(cursor != NULL) {
-    if(strcmp(buf, cursor->word) == 0) {
-      return true;
-    }
-    cursor = cursor->next;
-  }
-
   toLowercase(buf, word);
   bucket_value = hash_function(word);
   cursor = hashtable[bucket_value];
@@ -164,7 +155,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
     buf[LENGTH] = '\0';
     if(!check_word(buf, hashtable)) {
       misspelled[num_incorrect] = malloc(sizeof(buf));
-      strncpy(misspelled[num_incorrect], buf, sizeof(buf));
+      strncpy(misspelled[num_incorrect], buf, strlen(buf));
       num_incorrect++;
     }
   }
