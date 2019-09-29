@@ -15,8 +15,9 @@ void toLowercase(char *buf) {
     i++;
   }
 }
-void trim_end(char *buf, size_t length) {
+void trim_end(char *buf) {
 
+  int length = strlen(buf);
   int i = length-1;
 
   while(!isalpha(buf[i-1]) && ispunct(buf[i])) {
@@ -42,20 +43,23 @@ bool check_ascii(char *buf) {
 
   return true;
 }
-bool check_punct(char *buf) {
+void trim_front(char *buf) {
 
-  char* src = buf;
+  int length = strlen(buf);
 
-  while(*src) {
-    if(ispunct(*src)) {
-      if(strcmp(src, "'") != 0) {
-        return true;
-      }
-    }
-    src++;
+  while(ispunct(buf[0])) {
+    memcpy(buf, &buf[1], length - 1);
   }
-
-  return false;
+  // char* src = buf;
+  //
+  // while(*src) {
+  //   if(ispunct(*src)) {
+  //     if(strcmp(src, "'") != 0) {
+  //       return true;
+  //     }
+  //   }
+  //   src++;
+  // }
 }
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
@@ -65,31 +69,42 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   hashmap_t new_node;
   int counter;
 
+  //erase buf to be empty
   memset(buf, '\0', sizeof(buf));
 
-  //  Initialize all values in hash table to NULL.
+  //initialize all values in hash table to NULL
   for(counter = 0; counter < HASH_SIZE; counter++) {
     hashtable[counter] = NULL;
   }
 
-  //  Open dict_file from path stored in dictionary.
+  //open dictionary from path stored in dictionary_file
   fp = fopen(dictionary_file, "r");
 
-  //  If dict_file is NULL: return false
+  //if dictionary_file is NULL: return false
   if (fp == NULL) {
     fclose(fp);
     return false;
   }
 
-  // While word in dict_file is not EOF (end of file):
+  //while read word from dictionary_file is not EOF (end of file):
   while(fgets(buf, LENGTH+1, fp) != NULL) {
-    buf[strcspn(buf, "\n")] = 0;
-    printf("%s\n", buf);
+
+    //read buf again as string minus whitespace to remove any newline
+    sscanf(buf, "%s", buf);
+
+    //create a new node to hold the new word
+    //set next to NULL as it doesnt point to anything yet
+    //copy the read word into the new node
     new_node = malloc(sizeof(struct node));
     new_node->next = NULL;
     strncpy(new_node->word, buf, strlen(buf));
+
+    //find correct buck for word in hashtable
     bucket_value = hash_function(buf);
 
+    //if its the first item in the bucket then just
+    //point the bucket to the new node otherwise
+    //add it to the front of the list for that bucket
     if(hashtable[bucket_value] == NULL) {
       hashtable[bucket_value] = new_node;
     } else {
@@ -98,6 +113,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
     }
   }
 
+  //close the file
   fclose(fp);
   return true;
 }
@@ -111,19 +127,9 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   strcpy(buf, word);
 
 
-  if(!check_ascii(word)) {
-    return false;
-  }
-
-  if(length > LENGTH) {
-    return false;
-  }
-
-  trim_end(buf, length);
-
-  if(check_punct(buf)) {
-    return false;
-  }
+  // if(check_punct(buf)) {
+  //   return false;
+  // }
 
   toLowercase(buf);
 
@@ -142,26 +148,53 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 }
 int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
 
-  char buf[LENGTH+1];
-  char* overflow;
-  int num_incorrect;
+  int index = 0;
+  ssize_t read;
+  char *line = NULL;
+  size_t len = 0;
+  char* token;
+  int num_incorrect = 0;
 
-  //  Initialize all values in misspelled to NULL.
-  for(num_incorrect = 0; num_incorrect < MAX_MISSPELLED; num_incorrect++) {
-    misspelled[num_incorrect] = NULL;
+  //initialize all values in misspelled to NULL
+  for(index = 0; index < MAX_MISSPELLED; index++) {
+    misspelled[index] = NULL;
   }
 
-  num_incorrect = 0;
-  while(fscanf(fp, "%ms", &overflow) != EOF) {
-    strncpy(buf, overflow, LENGTH);
-    free(overflow);
-    buf[LENGTH] = '\0';
-    if(!check_word(buf, hashtable)) {
-      misspelled[num_incorrect] = malloc(sizeof(buf));
-      strncpy(misspelled[num_incorrect], buf, strlen(buf));
-      num_incorrect++;
+  //if fp is NULL: return 0
+  if (fp == NULL) {
+    return 0;
+  }
+
+  //read a line from the file until eof
+  while ((read = getline(&line, &len, fp)) != -1) {
+
+    //strip the newline at the end
+    line[strcspn(line, "\n")] = '\0';
+
+    //split the line into tokens split by space and check if each
+    //token is in the hashtable
+    token = strtok(line, " ");
+    while (token != NULL) {
+
+        //trim any punctuation from the end of token
+        trim_end(token);
+
+        //trim any punctuation from the front of token
+        trim_front(token);
+
+        //if there are non ascii characters then the word is not valid
+        if(!check_ascii(token)) {
+          return false;
+        }
+
+      if(!check_word(token, hashtable)) {
+        misspelled[num_incorrect] = malloc(sizeof(token));
+        strncpy(misspelled[num_incorrect], token, strlen(token));
+        num_incorrect++;
+      }
+      token = strtok(NULL, " ");
     }
   }
-
+  //if the read word is greater than maximum length of a word than it cannot be valid
   return num_incorrect;
 }
