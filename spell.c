@@ -114,7 +114,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 bool check_word(const char* word, hashmap_t hashtable[]) {
 
   int bucket_value;
-  hashmap_t cursor;
+  hashmap_t cursor = NULL;
   char buf[LENGTH];
   int length;
 
