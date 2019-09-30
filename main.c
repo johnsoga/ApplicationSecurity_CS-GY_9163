@@ -33,26 +33,26 @@ int main(int argc, char **argv) {
 
   //check the words from the input file to see which
   //are in the dictionary
-  // num_words_found = check_words(fp, hashtable, misspelled);
+  num_words_found = check_words(fp, hashtable, misspelled);
 
-  // printf("Found %d words that were incorrect\n", num_words_found);
+  printf("Found %d words that were incorrect\n", num_words_found);
 
-  // //free the hashtable memory
-  // for(i = 0; i < HASH_SIZE; i++) {
-  //   curr = hashtable[i];
-  //   while(curr != NULL) {
-  //     next = curr->next;
-  //     free(curr);
-  //     curr = next;
-  //   }
-  // }
-  //
-  // //free the misspelled memory
-  // for(i = 0; i < MAX_MISSPELLED; i++) {
-  //   if(misspelled[i] != NULL) {
-  //     free(misspelled[i]);
-  //   }
-  // }
+  //free the hashtable memory
+  for(i = 0; i < HASH_SIZE; i++) {
+    curr = hashtable[i];
+    while(curr != NULL) {
+      next = curr->next;
+      free(curr);
+      curr = next;
+    }
+  }
+
+  //free the misspelled memory
+  for(i = 0; i < MAX_MISSPELLED; i++) {
+    if(misspelled[i] != NULL) {
+      free(misspelled[i]);
+    }
+  }
 
   fclose(fp);
   return 0;
