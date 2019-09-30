@@ -88,6 +88,8 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
     new_node = malloc(sizeof(struct node));
     if(new_node != NULL) {
       new_node->next = NULL;
+      memset(new_node->next, '\0', sizeof(new_node->next));
+
       strncpy(new_node->word, buf, strlen(buf));
 
       //find correct buck for word in hashtable
