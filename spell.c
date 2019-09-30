@@ -193,6 +193,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
       }
       token = strtok(NULL, " ");
     }
+    free(line);
   }
 
   return num_incorrect;
