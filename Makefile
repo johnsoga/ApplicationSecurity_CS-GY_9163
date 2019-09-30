@@ -31,7 +31,7 @@ prog: dictionary.o spell.o main.o
 
 val: dictionary.o spell.o main.o
 	gcc -Wall -o spell_check dictionary.o spell.o main.o
-	valgrind --leak-check=yes ./spell_check test1.txt wordlist.txt
+	valgrind --leak-check=yes --track-origins=yes ./spell_check test1.txt wordlist.txt
 	
 clean:
 	rm *.o
