@@ -50,16 +50,6 @@ void trim_front(char *buf) {
   while(ispunct(buf[0])) {
     memcpy(buf, &buf[1], length - 1);
   }
-  // char* src = buf;
-  //
-  // while(*src) {
-  //   if(ispunct(*src)) {
-  //     if(strcmp(src, "'") != 0) {
-  //       return true;
-  //     }
-  //   }
-  //   src++;
-  // }
 }
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
@@ -137,6 +127,7 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   bucket_value = hash_function(buf);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
+    printf("buf is %s, and node-word is %s\n", buf, cursor->word);
     if(strcmp(buf, cursor->word) == 0) {
       return true;
     }
