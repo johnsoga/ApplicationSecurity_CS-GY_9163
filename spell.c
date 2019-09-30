@@ -130,9 +130,10 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   bucket_value = hash_function(buf);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
-    printf("buf is %s, and node-word is %s\n", buf, cursor->word);
     if(strcmp(buf, cursor->word) == 0) {
       return true;
+    } else {
+        printf("WTF: buf is %s, and node-word is %s\n", buf, cursor->word);
     }
     cursor = cursor->next;
   }
