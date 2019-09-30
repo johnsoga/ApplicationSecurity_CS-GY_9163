@@ -56,7 +56,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   FILE *fp;
   char buf[LENGTH+1];
   int bucket_value;
-  hashmap_t new_node;
+  hashmap_t new_node = NULL;
   int counter;
 
   //erase buf to be empty
@@ -87,7 +87,6 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
     //copy the read word into the new node
     if((new_node = malloc(sizeof(struct node))) != NULL) {
       new_node->next = NULL;
-      new_node->word = malloc(strlen(buf));
       strncpy(new_node->word, buf, strlen(buf));
 
       //find correct buck for word in hashtable
