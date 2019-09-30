@@ -85,7 +85,8 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
     //create a new node to hold the new word
     //set next to NULL as it doesnt point to anything yet
     //copy the read word into the new node
-    if((new_node = malloc(sizeof(struct node))) != NULL) {
+    new_node = malloc(sizeof(struct node));
+    if(new_node != NULL) {
       new_node->next = NULL;
       strncpy(new_node->word, buf, strlen(buf));
 
