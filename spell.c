@@ -85,27 +85,30 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
     //create a new node to hold the new word
     //set next to NULL as it doesnt point to anything yet
     //copy the read word into the new node
-    new_node = malloc(sizeof(struct node));
-    new_node->next = NULL;
-    strncpy(new_node->word, buf, strlen(buf));
+    if((new_node = malloc(sizeof(struct node))) != NULL) {
+      new_node->next = NULL;
+      strncpy(new_node->word, buf, strlen(buf));
 
-    //find correct buck for word in hashtable
-    bucket_value = hash_function(buf);
+      //find correct buck for word in hashtable
+      bucket_value = hash_function(buf);
 
-    //if its the first item in the bucket then just
-    //point the bucket to the new node otherwise
-    //add it to the front of the list for that bucket
-    if(hashtable[bucket_value] == NULL) {
-      hashtable[bucket_value] = new_node;
-    } else {
-      new_node->next = hashtable[bucket_value];
-      hashtable[bucket_value] = new_node;
+      //if its the first item in the bucket then just
+      //point the bucket to the new node otherwise
+      //add it to the front of the list for that bucket
+      if(hashtable[bucket_value] == NULL) {
+        hashtable[bucket_value] = new_node;
+      } else {
+        new_node->next = hashtable[bucket_value];
+        hashtable[bucket_value] = new_node;
+      }
+
+      return true;
     }
   }
 
   //close the file
   fclose(fp);
-  return true;
+  return false;
 }
 bool check_word(const char* word, hashmap_t hashtable[]) {
 
