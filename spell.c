@@ -129,12 +129,8 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   toLowercase(buf);
   bucket_value = hash_function(buf);
-  printf("bucket is %d\n", bucket_value);
   cursor = hashtable[bucket_value];
-  // printf("cursor is %s\n", cursor);
   while(cursor != NULL) {
-    printf("Cursor not NULL\n");
-
     if(strcmp(buf, cursor->word) == 0) {
       return true;
     }
