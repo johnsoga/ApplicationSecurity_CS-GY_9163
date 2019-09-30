@@ -21,16 +21,6 @@ int main(int argc, char **argv) {
       printf("Load dictionary was successful\n");
   }
 
-  for(i = 0; i < HASH_SIZE; i++) {
-    curr = hashtable[i];
-    while(curr != NULL) {
-      printf("%s > ", curr->word);
-      next = curr->next;
-      curr = next;
-    }
-    printf("%s\n", curr->word);
-  }
-
   //check the words from the input file to see which
   //are in the dictionary
   num_words_found = check_words(fp, hashtable, misspelled);
