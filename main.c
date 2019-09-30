@@ -6,6 +6,7 @@ int main(int argc, char **argv) {
   char *wordlist = argv[2];
   char *text = argv[1];
   char *misspelled[MAX_MISSPELLED];
+  int num_words_found;
   FILE *fp;
   int i;
   hashmap_t curr;
@@ -19,8 +20,10 @@ int main(int argc, char **argv) {
 
   //check the words from the input file to see which
   //are in the dictionary
-  check_words(fp, hashtable, misspelled);
+  num_words_found = check_words(fp, hashtable, misspelled);
 
+  printf("Found %d words that were incorrect\n", num_words_found);
+  
   //free the hashtable memory
   for(i = 0; i < HASH_SIZE; i++) {
     curr = hashtable[i];
