@@ -16,13 +16,17 @@ int main(int argc, char **argv) {
   hashmap_t hashtable[HASH_SIZE];
   fp = fopen(text, "r");
 
+  //initialize all values in misspelled to NULL
+  for(i = 0; i < MAX_MISSPELLED; i++) {
+    misspelled[i] = '\0';
+  }
+
   //load the hashtable with words from the dictionary
   if(load_dictionary(wordlist, hashtable)) {
       printf("Load dictionary was successful\n");
   }
 
-  //check the words from the input file to see which
-  //are in the dictionary
+  //check the words from the input file to see which are in the dictionary
   num_words_found = check_words(fp, hashtable, misspelled);
 
   printf("Found %d words that were incorrect\n", num_words_found);
