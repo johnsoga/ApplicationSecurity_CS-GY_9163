@@ -80,7 +80,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
   while(fgets(buf, LENGTH+1, fp) != NULL) {
 
     //read buf again as string minus whitespace to remove any newline
-    sscanf(buf, "%s", buf);
+    sscanf(buf , "%s", buf);
 
     //create a new node to hold the new word
     //set next to NULL as it doesnt point to anything yet
@@ -101,14 +101,15 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
         new_node->next = hashtable[bucket_value];
         hashtable[bucket_value] = new_node;
       }
-
-      return true;
+    } else {
+      return false;
     }
+    memset(buf, '\0', sizeof(buf));
   }
 
   //close the file
   fclose(fp);
-  return false;
+  return true;
 }
 bool check_word(const char* word, hashmap_t hashtable[]) {
 
@@ -128,12 +129,14 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   toLowercase(buf);
   bucket_value = hash_function(buf);
+  printf("bucket is %d\n", bucket_value);
   cursor = hashtable[bucket_value];
+  // printf("cursor is %s\n", cursor);
   while(cursor != NULL) {
+    printf("Cursor not NULL\n");
+
     if(strcmp(buf, cursor->word) == 0) {
       return true;
-    } else {
-        printf("WTF: buf is %s, and node-word is %s\n", buf, cursor->word);
     }
     cursor = cursor->next;
   }

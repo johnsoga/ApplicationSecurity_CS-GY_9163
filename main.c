@@ -5,9 +5,10 @@ int main(int argc, char **argv) {
 
   char *wordlist = argv[2];
   char *text = argv[1];
-  char *misspelled[MAX_MISSPELLED];
-  int num_words_found;
   FILE *fp;
+
+  // char *misspelled[MAX_MISSPELLED];
+  // int num_words_found;
   int i;
   hashmap_t curr;
   hashmap_t next;
@@ -16,30 +17,42 @@ int main(int argc, char **argv) {
   fp = fopen(text, "r");
 
   //load the hashtable with words from the dictionary
-  load_dictionary(wordlist, hashtable);
+  if(load_dictionary(wordlist, hashtable)) {
+      printf("Load dictionary was successful\n");
+  }
 
-  //check the words from the input file to see which
-  //are in the dictionary
-  num_words_found = check_words(fp, hashtable, misspelled);
-
-  printf("Found %d words that were incorrect\n", num_words_found);
-  
-  //free the hashtable memory
   for(i = 0; i < HASH_SIZE; i++) {
     curr = hashtable[i];
     while(curr != NULL) {
+      printf("%s > ", curr->word);
       next = curr->next;
-      free(curr);
       curr = next;
     }
+    printf("%s\n", curr->word);
   }
 
-  //free the misspelled memory
-  for(i = 0; i < MAX_MISSPELLED; i++) {
-    if(misspelled[i] != NULL) {
-      free(misspelled[i]);
-    }
-  }
+  //check the words from the input file to see which
+  //are in the dictionary
+  // num_words_found = check_words(fp, hashtable, misspelled);
+
+  // printf("Found %d words that were incorrect\n", num_words_found);
+
+  // //free the hashtable memory
+  // for(i = 0; i < HASH_SIZE; i++) {
+  //   curr = hashtable[i];
+  //   while(curr != NULL) {
+  //     next = curr->next;
+  //     free(curr);
+  //     curr = next;
+  //   }
+  // }
+  //
+  // //free the misspelled memory
+  // for(i = 0; i < MAX_MISSPELLED; i++) {
+  //   if(misspelled[i] != NULL) {
+  //     free(misspelled[i]);
+  //   }
+  // }
 
   fclose(fp);
   return 0;
