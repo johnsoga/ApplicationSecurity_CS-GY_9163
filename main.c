@@ -7,8 +7,8 @@ int main(int argc, char **argv) {
   char *text = argv[1];
   FILE *fp;
 
-  // char *misspelled[MAX_MISSPELLED];
-  // int num_words_found;
+  char *misspelled[MAX_MISSPELLED];
+  int num_words_found;
   int i;
   hashmap_t curr;
   hashmap_t next;
