@@ -121,18 +121,19 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
   int bucket_value;
   hashmap_t cursor;
-  int length = strlen(word);
-  char buf[length];
+  char buf[LENGTH];
+  int length;
+
+  //if read word is greater than maximum length of a word than it cannot be valid
+  if((length = strlen(word)) > LENGTH) {
+      return false;
+  }
+
+  //erase buf memory space and then copy the word to check into it
   memset(buf, '\0', sizeof(buf));
   strcpy(buf, word);
 
-
-  // if(check_punct(buf)) {
-  //   return false;
-  // }
-
   toLowercase(buf);
-
   bucket_value = hash_function(buf);
   cursor = hashtable[bucket_value];
   while(cursor != NULL) {
@@ -141,8 +142,6 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
     }
     cursor = cursor->next;
   }
-
-  printf("%s\t%s\n", buf, word);
 
   return false;
 }
@@ -195,6 +194,6 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
       token = strtok(NULL, " ");
     }
   }
-  //if the read word is greater than maximum length of a word than it cannot be valid
+
   return num_incorrect;
 }
