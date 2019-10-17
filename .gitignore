@@ -1,8 +1,6 @@
 *.o
-
 spell_check
-
 textlist.txt
-
 badlist.txt
 *.gch
+test_main
