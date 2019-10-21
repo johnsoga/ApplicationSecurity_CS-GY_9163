@@ -1,4 +1,4 @@
 language: c
 compiler: gcc
 
-script: make get-deps && make prog && make test
+script: make get-deps && make prog && make val && make test

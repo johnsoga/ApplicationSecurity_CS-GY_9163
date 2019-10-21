@@ -4,7 +4,12 @@ default: prog
 
 get-deps:
 	sudo apt-get update
-	sudo apt-get install -y build-essential check
+	sudo apt-get install -y build-essential check wget valgrind
+	wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
+	tar xvf afl-latest.tgz
+	cd afl-*
+	./afl-*/make && sudo ./afl-*/make install
+	cd
 
 .DELETE_ON_ERROR:
 dictionary.o: dictionary.c
@@ -32,7 +37,7 @@ prog: dictionary.o spell.o main.o
 val: dictionary.o spell.o main.o
 	gcc -Wall -o spell_check dictionary.o spell.o main.o
 	valgrind --leak-check=yes --track-origins=yes ./spell_check test1.txt wordlist.txt
-	
+
 clean:
 	rm *.o
 
