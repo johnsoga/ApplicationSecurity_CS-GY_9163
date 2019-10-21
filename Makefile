@@ -5,10 +5,10 @@ default: prog
 get-deps:
 	sudo apt-get update
 	sudo apt-get install -y build-essential check wget valgrind
-	cd /tmp
 	wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
-	tar xvf afl-latest.tgz
-	cd /tmp/afl-*
+	mkdir
+	tar xf afl-latest.tgz -C $PWD
+	cd $PWD/afl-*
 	make && sudo make install
 
 .DELETE_ON_ERROR:
