@@ -33,6 +33,7 @@ END_TEST
 
 START_TEST(test_check_words_normal)
 {
+    int i;
     hashmap_t hashtable[HASH_SIZE];
     load_dictionary(DICTIONARY, hashtable);
     char* expected[3];
