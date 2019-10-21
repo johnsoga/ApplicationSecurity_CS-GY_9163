@@ -7,9 +7,8 @@ get-deps:
 	sudo apt-get install -y build-essential check wget valgrind
 	wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
 	tar xvf afl-latest.tgz
-	cd afl-*
+	cd ./afl-*
 	make && sudo make install
-	cd
 
 .DELETE_ON_ERROR:
 dictionary.o: dictionary.c
