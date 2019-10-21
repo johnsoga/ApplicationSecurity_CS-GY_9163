@@ -8,7 +8,7 @@ get-deps:
 	wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
 	tar xvf afl-latest.tgz
 	cd afl-*
-	./afl-*/make && sudo ./afl-*/make install
+	make && sudo make install
 	cd
 
 .DELETE_ON_ERROR:
