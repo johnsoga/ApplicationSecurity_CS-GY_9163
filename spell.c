@@ -43,6 +43,20 @@ bool check_ascii(const char *buf) {
 
   return true;
 }
+bool check_numbers(const char *buf) {
+
+  const char* src = buf;
+
+  while(*src) {
+    if(isdigit(*src)) {
+      src++;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
+}
 void trim_front(char *buf) {
 
   int length = strlen(buf);
@@ -129,6 +143,11 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
   // if there are non ascii characters then the word is not valid
   if(!check_ascii(word)) {
       return false;
+  }
+
+  // if the word is all numbers then the word is valid
+  if(check_numbers(word)) {
+      return true;
   }
 
   //erase buf memory space and then copy the word to check into it
